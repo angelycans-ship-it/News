@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(template.html)",
+      "Write(template.html)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(git diff:*)",
+      "Bash(curl:*)",
+      "Bash(pip install:*)",
+      "Bash(pip3 install:*)",
+      "Bash(python3:*)",
+      "Bash(mkdir:*)",
+      "Bash(ls:*)",
+      "Bash(cp:*)",
+      "Bash(base64:*)",
+      "Bash(wc:*)",
+      "Bash(file:*)",
+      "Bash(cat:*)"
+    ]
+  }
+}
