@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls *)",
+      "Bash(find /home/user/News*)",
+      "Bash(find /root/.claude/projects/-home-user-News*)",
+      "Bash(wc -l *)",
+      "Bash(cp /root/.claude/projects/-home-user-News/* /home/user/News/*)",
+      "Bash(cp /tmp/claude-0/* /home/user/News/*)",
+      "Bash(mkdir -p /tmp/claude-0/*)",
+      "Bash(curl -s -o *)",
+      "Bash(curl -sL -o *)",
+      "Bash(curl --output *)",
+      "Bash(base64 -i *)",
+      "Bash(sips *)",
+      "Bash(rm /tmp/claude-0/*)",
+      "Bash(git -C /home/user/News status*)",
+      "Bash(git -C /home/user/News diff*)"
+    ]
+  }
+}
