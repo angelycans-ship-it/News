@@ -22,3 +22,13 @@ task giornaliero):
 File coinvolti in ogni edizione: `index.html` (servito da GitHub Pages) e
 `template.html` (riferimento di design, stessa struttura/CSS, solo contenuti
 aggiornati).
+
+## Passaggio fisso: immagine per il widget XL di iOS
+
+Dopo aver scritto `index.html` del giorno, e prima del commit, eseguire
+`python3 make_widget.py`: rigenera `widget.jpg` (1092x1782, formato widget XL
+4x6 di iOS 27) leggendo data, notizie principali e foto da `index.html`.
+Committare `widget.jpg` insieme a `index.html` e `template.html`.
+L'utente lo mostra sulla Home con l'app Widgy all'indirizzo
+https://angelycans-ship-it.github.io/News/widget.jpg (il tocco apre il sito).
+
