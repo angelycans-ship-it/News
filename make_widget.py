@@ -16,8 +16,8 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
-# Widget XL su iPhone: 364 x 594 punti (4x6 slot). Render a 3x -> 1092 x 1782 px.
-W, H, SCALE = 364, 594, 3
+# Proporzioni misurate sul widget XL reale (circa 0,655). Render a 3x -> 1092 x 1668 px.
+W, H, SCALE = 364, 556, 3
 
 SECTIONS = [("i", "Italia", "#EC672C", "#F0864C"),
             ("e", "Estero", "#E85A38", "#FF7A59"),
@@ -64,7 +64,7 @@ def build(date, data):
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
 *{{box-sizing:border-box;margin:0;padding:0}}
 html,body{{width:{W}px;height:{H}px;background:#FFF8F3;font-family:Inter,"DejaVu Sans",sans-serif;-webkit-font-smoothing:antialiased}}
-.wrap{{width:{W}px;height:{H}px;display:flex;flex-direction:column;padding:16px 14px 14px}}
+.wrap{{width:{W}px;height:{H}px;display:flex;flex-direction:column;padding:24px 14px 14px}}
 .head{{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 10px}}
 .brand{{font-size:20px;font-weight:800;color:#B4451A;letter-spacing:-.01em}}
 .date{{font-size:13px;font-weight:600;color:#8A4A2C}}
@@ -73,11 +73,11 @@ html,body{{width:{W}px;height:{H}px;background:#FFF8F3;font-family:Inter,"DejaVu
 .body{{padding:9px 12px 11px}}
 .tag{{font-size:11px;font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:.06em}}
 .big h2{{font-size:17px;line-height:1.25;font-weight:700;margin-top:3px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
-.big{{height:236px}}
-.pair{{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px;height:196px}}
+.big{{height:212px}}
+.pair{{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px;height:178px}}
 .small h2{{font-size:13.5px;line-height:1.25;font-weight:700;margin-top:2px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
 .small .body{{padding:8px 10px 10px;height:92px}}
-.rows{{margin-top:12px;display:flex;flex-direction:column;gap:7px;padding:0 4px}}
+.rows{{margin-top:11px;display:flex;flex-direction:column;gap:7px;padding:0 4px}}
 .row{{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:#3B1E10}}
 .row span:last-child{{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 .dot{{width:8px;height:8px;border-radius:50%;flex:none}}

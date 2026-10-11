@@ -26,7 +26,7 @@ aggiornati).
 ## Passaggio fisso: immagine per il widget XL di iOS
 
 Dopo aver scritto `index.html` del giorno, e prima del commit, eseguire
-`python3 make_widget.py`: rigenera `widget.jpg` (1092x1782, formato widget XL
+`python3 make_widget.py`: rigenera `widget.jpg` (1092x1668, formato widget XL
 4x6 di iOS 27) leggendo data, notizie principali e foto da `index.html`.
 Committare `widget.jpg` insieme a `index.html` e `template.html`.
 L'utente lo mostra sulla Home con l'app Widgy all'indirizzo
