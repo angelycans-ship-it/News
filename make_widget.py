@@ -82,7 +82,7 @@ html,body{{width:{W}px;height:{H}px;background:#FFF8F3;font-family:Inter,"DejaVu
 .row span:last-child{{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 .dot{{width:8px;height:8px;border-radius:50%;flex:none}}
 </style></head><body><div class="wrap">
-<div class="head"><span class="brand">Rassegna</span><span class="date">{e(date)} · 6:30</span></div>
+<div class="head"><span class="brand">Rassegna</span><span class="date">{e(date)}</span></div>
 <div class="card big" style="background:{ci}">{photo(i["img"], pi)}
 <div class="body"><div class="tag">Italia</div><h2>{e(i["title"])}</h2></div></div>
 <div class="pair">
