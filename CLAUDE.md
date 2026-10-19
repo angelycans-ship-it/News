@@ -32,3 +32,7 @@ Committare `widget.jpg` insieme a `index.html` e `template.html`.
 L'utente lo mostra sulla Home con l'app Widgy all'indirizzo
 https://angelycans-ship-it.github.io/News/widget.jpg (il tocco apre il sito).
 
+Il tema del widget è automatico (nessun flag da passare): chiaro per l'edizione delle
+6:30, scuro (sfondo nero, stile modalità scura iOS) per quella della sera, cioè dalle
+12 in poi ora italiana. `--dark` / `--light` lo forzano.
+

@@ -4,14 +4,17 @@
 Uso:  python3 make_widget.py            (legge index.html, scrive widget.jpg)
       python3 make_widget.py in.html out.jpg
 
-Stile scuro (sfondo nero, come la modalità scura di iOS). Il widget mostra: testata con data, notizia principale Italia (grande, con foto),
+Tema automatico: chiaro per l'edizione del mattino, scuro (sfondo nero, come la modalita' scura di iOS)
+dalle 12 in poi (ora italiana); forzabile con --dark / --light. Il widget mostra: testata con data, notizia principale Italia (grande, con foto),
 Estero e Tecnologia affiancate (con foto), una seconda notizia per area in una riga.
 Le foto vengono riprese dalle hero card di index.html (gia' incorporate in base64).
 """
 import html
 import re
 import sys
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
@@ -54,20 +57,22 @@ def photo(src, color):
     return f'<div class="ph" style="background:{color}"></div>'
 
 
-def build(date, data):
+def build(date, data, dark=False):
     e = html.escape
     i, est, tec = (data[k] for k, *_ in SECTIONS)
     (_, _, ci, pi), (_, _, ce, pe), (_, _, ct, pt) = SECTIONS
     rows = "".join(
         f'<div class="row"><span class="dot" style="background:{c}"></span><span>{e(data[k]["second"])}</span></div>'
         for k, _, c, _ in SECTIONS if data[k]["second"])
+    bg, brand, dcol, rowc = (("#000", "#F0864C", "#9A9AA0", "#F2F2F7") if dark
+                             else ("#FFF8F3", "#B4451A", "#8A4A2C", "#3B1E10"))
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
 *{{box-sizing:border-box;margin:0;padding:0}}
-html,body{{width:{W}px;height:{H}px;background:#000;font-family:Inter,"DejaVu Sans",sans-serif;-webkit-font-smoothing:antialiased}}
+html,body{{width:{W}px;height:{H}px;background:{bg};font-family:Inter,"DejaVu Sans",sans-serif;-webkit-font-smoothing:antialiased}}
 .wrap{{width:{W}px;height:{H}px;display:flex;flex-direction:column;padding:24px 14px 14px}}
 .head{{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 10px}}
-.brand{{font-size:20px;font-weight:800;color:#F0864C;letter-spacing:-.01em}}
-.date{{font-size:13px;font-weight:600;color:#9A9AA0}}
+.brand{{font-size:20px;font-weight:800;color:{brand};letter-spacing:-.01em}}
+.date{{font-size:13px;font-weight:600;color:{dcol}}}
 .card{{border-radius:18px;overflow:hidden;display:flex;flex-direction:column;color:#fff}}
 .ph{{flex:1;min-height:0}}
 .body{{padding:9px 12px 11px}}
@@ -78,7 +83,7 @@ html,body{{width:{W}px;height:{H}px;background:#000;font-family:Inter,"DejaVu Sa
 .small h2{{font-size:13.5px;line-height:1.25;font-weight:700;margin-top:2px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
 .small .body{{padding:8px 10px 10px;height:92px}}
 .rows{{margin-top:11px;display:flex;flex-direction:column;gap:7px;padding:0 4px}}
-.row{{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:#F2F2F7}}
+.row{{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:{rowc}}}
 .row span:last-child{{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 .dot{{width:8px;height:8px;border-radius:50%;flex:none}}
 </style></head><body><div class="wrap">
@@ -96,10 +101,20 @@ html,body{{width:{W}px;height:{H}px;background:#000;font-family:Inter,"DejaVu Sa
 
 
 def main():
-    src = Path(sys.argv[1] if len(sys.argv) > 1 else "index.html")
-    out = Path(sys.argv[2] if len(sys.argv) > 2 else "widget.jpg")
+    flags = {a for a in sys.argv[1:] if a.startswith("--")}
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    src = Path(args[0] if len(args) > 0 else "index.html")
+    out = Path(args[1] if len(args) > 1 else "widget.jpg")
+    # Tema: --dark / --light lo forzano; altrimenti scuro dalle 12 in poi (ora italiana),
+    # cioe' edizione della sera scura, edizione delle 6:30 chiara.
+    if "--dark" in flags:
+        dark = True
+    elif "--light" in flags:
+        dark = False
+    else:
+        dark = datetime.now(ZoneInfo("Europe/Rome")).hour >= 12
     date, data = parse(src.read_text(encoding="utf-8"))
-    page_html = build(date, data)
+    page_html = build(date, data, dark)
     with sync_playwright() as p:
         try:
             browser = p.chromium.launch()
@@ -109,7 +124,7 @@ def main():
         page.set_content(page_html, wait_until="load")
         page.screenshot(path=str(out), type="jpeg", quality=82, clip={"x": 0, "y": 0, "width": W, "height": H})
         browser.close()
-    print(f"OK: {out} ({W * SCALE}x{H * SCALE}) — {date}")
+    print(f"OK: {out} ({W * SCALE}x{H * SCALE}) — {date} — {'scuro' if dark else 'chiaro'}")
 
 
 if __name__ == "__main__":
