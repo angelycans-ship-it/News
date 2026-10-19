@@ -4,7 +4,7 @@
 Uso:  python3 make_widget.py            (legge index.html, scrive widget.jpg)
       python3 make_widget.py in.html out.jpg
 
-Il widget mostra: testata con data, notizia principale Italia (grande, con foto),
+Stile scuro (sfondo nero, come la modalità scura di iOS). Il widget mostra: testata con data, notizia principale Italia (grande, con foto),
 Estero e Tecnologia affiancate (con foto), una seconda notizia per area in una riga.
 Le foto vengono riprese dalle hero card di index.html (gia' incorporate in base64).
 """
@@ -63,11 +63,11 @@ def build(date, data):
         for k, _, c, _ in SECTIONS if data[k]["second"])
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
 *{{box-sizing:border-box;margin:0;padding:0}}
-html,body{{width:{W}px;height:{H}px;background:#FFF8F3;font-family:Inter,"DejaVu Sans",sans-serif;-webkit-font-smoothing:antialiased}}
+html,body{{width:{W}px;height:{H}px;background:#000;font-family:Inter,"DejaVu Sans",sans-serif;-webkit-font-smoothing:antialiased}}
 .wrap{{width:{W}px;height:{H}px;display:flex;flex-direction:column;padding:24px 14px 14px}}
 .head{{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 10px}}
-.brand{{font-size:20px;font-weight:800;color:#B4451A;letter-spacing:-.01em}}
-.date{{font-size:13px;font-weight:600;color:#8A4A2C}}
+.brand{{font-size:20px;font-weight:800;color:#F0864C;letter-spacing:-.01em}}
+.date{{font-size:13px;font-weight:600;color:#9A9AA0}}
 .card{{border-radius:18px;overflow:hidden;display:flex;flex-direction:column;color:#fff}}
 .ph{{flex:1;min-height:0}}
 .body{{padding:9px 12px 11px}}
@@ -78,7 +78,7 @@ html,body{{width:{W}px;height:{H}px;background:#FFF8F3;font-family:Inter,"DejaVu
 .small h2{{font-size:13.5px;line-height:1.25;font-weight:700;margin-top:2px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
 .small .body{{padding:8px 10px 10px;height:92px}}
 .rows{{margin-top:11px;display:flex;flex-direction:column;gap:7px;padding:0 4px}}
-.row{{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:#3B1E10}}
+.row{{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:#F2F2F7}}
 .row span:last-child{{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 .dot{{width:8px;height:8px;border-radius:50%;flex:none}}
 </style></head><body><div class="wrap">
@@ -101,7 +101,10 @@ def main():
     date, data = parse(src.read_text(encoding="utf-8"))
     page_html = build(date, data)
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        try:
+            browser = p.chromium.launch()
+        except Exception:  # Playwright senza il browser atteso: usa Chromium preinstallato
+            browser = p.chromium.launch(executable_path="/opt/pw-browsers/chromium")
         page = browser.new_page(viewport={"width": W, "height": H}, device_scale_factor=SCALE)
         page.set_content(page_html, wait_until="load")
         page.screenshot(path=str(out), type="jpeg", quality=82, clip={"x": 0, "y": 0, "width": W, "height": H})
